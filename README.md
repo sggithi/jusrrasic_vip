@@ -1,14 +1,11 @@
-# final_project
+# ExploreCSR
 
 
-조별로 온라인에서 텍스트로 즐길 수 있는 머드게임을 제작한다.  
-뼈대코드는 https://codesandbox.io/s/sleepy-blackburn-ixxn0?file=/src/readme.md:606-625 를 참고한다.  
+과제로 수행한 walking detection 모델을 활용한 게임 제작
+ 
 
 ## 기본 구성
-
-수업시간에 배운 express, mongoose르 활용하여 개발한다. 
-상태의 변화는 별도의 데이터베이스에 실시간으로 저장되어야 한다.  
-아이템, 맵 등의 정보는 json형태로 서버에서 따로 보관하고 있어야 한다.  
+뼈대코드는 https://codesandbox.io/s/sleepy-blackburn-ixxn0?file=/src/readme.md:606-625 를 참고한다. 
 
 
 ## 기본스펙
