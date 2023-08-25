@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 
 //몽고 DB 연결
-const mongoURL = 'mongodb+srv://test0:test0@testmongo.xir8z.mongodb.net/gameServer?retryWrites=true&w=majority';
+const mongoURL = 'mongodb+srv://dhghdgh:1111@cluster0.oz0xdmw.mongodb.net/';
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
