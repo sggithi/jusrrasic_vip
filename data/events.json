@@ -1,0 +1,7 @@
+[
+  { "type": "item", "description": "" },
+  { "type": "heal", "description": "" },
+  { "type": "none", "description": ""},
+  { "type": "battle", "description": "" },
+  { "type": "nearEnd", "description": "" }
+]
