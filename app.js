@@ -137,6 +137,7 @@ app.get("/game/:name", async (req, res) => {
     player: player,
     have: true,
   });
+
   const data = { name: name, inventory: inventory };
   res.render("game", { data });
 });
@@ -611,3 +612,17 @@ app.listen(port, () => {
 });
 
 //python 연결
+// var { spawn } = require("child_process");
+// const result = spawn("python", ["cam2.py"]);
+
+// result.stdout.on("data", (data) => {
+//   console.log(`stdout: ${data}`);
+// });
+
+// result.stderr.on("data", (data) => {
+//   console.error(`stderr: ${data}`);
+// });
+
+// result.on("close", (code) => {
+//   console.log(`child process exited with code ${code}`);
+// });

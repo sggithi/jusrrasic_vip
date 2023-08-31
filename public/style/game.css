@@ -1,24 +1,52 @@
 #modal {
-    display: none;
-    position: absolute;
-    top: 100px;
-    right: 400px;
-    width: 800px;
-    height: 400px;
-    background: #fff;
-    border: 1px solid #f7f7f7;
+  display: none;
+  position: absolute;
+  top: 100px;
+  right: 400px;
+  width: 800px;
+  height: 400px;
+  background: #fff;
+  border: 1px solid #f7f7f7;
 }
 
-.game_description{
-    position: absolute;
-    padding : 5px;
-    width: 95%;
-    height: 50%;
-    bottom: 50px;
-    border: solid black;
+.game_description {
+  position: absolute;
+  padding: 5px;
+  width: 95%;
+  height: 50%;
+  bottom: 50px;
+  border: solid black;
 }
 
-.inventory_info{
-    position: absolute;
+.inventory_info {
+  position: absolute;
+}
 
+.container {
+  position: fixed;
+  width: 700px;
+  left: 200px;
+  height: 300px;
+  top: 200px;
+}
+.column1 {
+  width: 300px;
+  height: 300px;
+}
+.columns {
+  width: 700px;
+}
+.column2 {
+  position: relative;
+  height: 300px;
+  width: 300px;
+  left: 10px;
+}
+
+.panel1 {
+  height: 300px;
+}
+
+.panel is-info {
+  height: 300px;
 }
