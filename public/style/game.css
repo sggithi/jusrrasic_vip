@@ -29,3 +29,9 @@
   z-index: 1;
   transform: scaleX(-1);
 }
+
+.column {
+  float: right;
+  width: 400px;
+  left: 500px;
+}
