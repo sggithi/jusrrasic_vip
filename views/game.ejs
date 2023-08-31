@@ -14,8 +14,7 @@
 </head>
 
 <body>
-<img style="width:54px; height:50px; top: 0px; float: right"
-     src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG">
+
 <div class="info">
     <div class="player_info">
     </div>
@@ -36,6 +35,8 @@
 <div id="inventory">
     아이템: <span id="items"></span><br>
 </div>
+<input type="text" id ="controller"/>
+<button id="text_controller" onclick = "control_submit()">controller</button>
 
 <div class = "game_description">
     <div id="game"></div>
@@ -44,15 +45,26 @@
     <div id="event_description"></div>
     -----------------------------------------------------------<br>
     <div id="control">
-        <button value="1">동쪽으로 이동한다.</button>
-        <button value="3">서쪽으로 이동한다.</button>
-        <button value="2">남쪽으로 이동한다.</button>
-        <button value="0">북쪽으로 이동한다.</button>
+
     </div>
 </div>
 
 <script>
-
+    var arr =[];
+    const control_submit = () =>{
+        const value = document.getElementById("controller").value;
+        
+        var buttons = document.getElementsByClassName('buttons');
+        for (var ii = 0; ii <buttons.length; ii++){
+            if(buttons[ii].innerText === value){
+                
+                buttons[ii].click();
+                console.log('why not');
+            }
+        }
+    ///    console.log(actions, "actions");
+    //    document.getElementById(value).click();
+    }
     const modal_open = () => {
         document.getElementById('modal').style.display = 'block'
     }
@@ -66,7 +78,7 @@
         location.href = "/";
     }
     const name =document.getElementById("name").innerText;
-
+    
     const sendAction = (url, params = {}) => {
         $.ajax({
             url,
@@ -77,22 +89,21 @@
             data: params
         }).done((req) => {
             const { player, field, event, actions } = req;
-
             $('#game').text(field.description);
             $('#position').text(`(${field.x},${field.y})`);
             const x = field.x;
             const y = field.y;
-
             $('#control').html('');
-            actions.forEach((action) => {
-                const dom = $('<button></button>');
+
+            actions.forEach((action, i) => {
+                const dom = $('<button class = "buttons" ></button>');
                 dom.text(action.text);
+                $('#control').append(dom);
                 dom.bind('click', function () {
                     sendAction(action.url, action.params);
-                });
-
-                $('#control').append(dom);
+                });    
             })
+        
 
             if (field.x === 9 && field.y === 9) {
                 if (player.teeth >= 30) {
@@ -131,4 +142,3 @@
 </script>
 </body>
 </html>
-
