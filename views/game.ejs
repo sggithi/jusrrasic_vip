@@ -7,6 +7,11 @@
 
     <link href="/static/style/game.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.2/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.1/hands.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,13 +19,31 @@
 </head>
 
 <body>
-
 <div class="info">
     <div class="player_info">
     </div>
     <div class="inventory_info">
     </div>
 </div>
+
+<!-- WEBCAM INPUT -->
+<div class="column">
+    <article class="panel is-info">
+        <p class="panel-heading">
+        User
+        </p>
+        <div class="panel-block">
+        <video class="input_video3"></video>
+        </div>
+    </article>
+</div>
+<div class="loading">
+    <div class="spinner"></div>
+</div>
+<div style="visibility: hidden;" class="control3">
+</div>
+
+
 
 <div id="name"><%= data.name%></div>
 <div id="status">
@@ -35,8 +58,6 @@
 <div id="inventory">
     아이템: <span id="items"></span><br>
 </div>
-<input type="text" id ="controller"/>
-<button id="text_controller" onclick = "control_submit()">controller</button>
 
 <div class = "game_description">
     <div id="game"></div>
@@ -45,26 +66,121 @@
     <div id="event_description"></div>
     -----------------------------------------------------------<br>
     <div id="control">
-
+        <button value="1">동쪽으로 이동한다.</button>
+        <button value="3">서쪽으로 이동한다.</button>
+        <button value="2">남쪽으로 이동한다.</button>
+        <button value="0">북쪽으로 이동한다.</button>
     </div>
 </div>
-
 <script>
-    var arr =[];
-    const control_submit = () =>{
-        const value = document.getElementById("controller").value;
+    // webCam 처리
+const video3 = document.getElementsByClassName('input_video3')[0];
+const fpsControl = new FPS();
+const controlsElement3 = document.getElementsByClassName('control3')[0];
+const spinner = document.querySelector('.loading');
+spinner.ontransitionend = () => {
+    spinner.style.display = 'none';
+};
+// 손 방향 처리
+
+const hands = new Hands({locateFile: (file) => {
+    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.1/${file}`;
+}});
+hands.onResults(onResultsHands);
+
+const camera = new Camera(video3, {
+    onFrame: async () => {
+    await hands.send({image: video3});
+    },
+    width: 480,
+    height: 480
+});
+
+camera.start();
+
+var arr = [];
+function onResultsHands(results) {
+    document.body.classList.add('loaded');
+    // fpsControl.tick();
+    if (results.multiHandLandmarks && results.multiHandedness) {
         
-        var buttons = document.getElementsByClassName('buttons');
-        for (var ii = 0; ii <buttons.length; ii++){
-            if(buttons[ii].innerText === value){
-                
-                buttons[ii].click();
-                console.log('why not');
+        for (let index = 0; index < results.multiHandLandmarks.length; index++) {
+            let x0 = results.multiHandLandmarks[index][0].x
+            let y0 = results.multiHandLandmarks[index][0].y
+            let x9 = results.multiHandLandmarks[index][9].x
+            let y9 = results.multiHandLandmarks[index][9].y
+    
+    
+            if(Math.abs(x9 - x0) < 0.05){
+            m = 1000000000
+            }else{
+            m = Math.abs((y9 - y0)/(x9 - x0));
             }
+            if(m >= 0 && m <= 1){
+            if( x9 > x0){
+                arr.push(3);
+                console.log("left");
+            }
+                
+            else{
+                arr.push(1);
+                console.log("right");
+
+            }
+                
+            
+            }
+            if(m > 1){
+            if(y9 > y0){
+                console.log("down");
+                arr.push(2);
+            }
+
+            else{
+                console.log("up");
+                arr.push(0);
+            }
+                
+            }
+
+            if (arr.length === 50){
+    
+                const obj ={};
+                const answer = [];
+                const directions = ["북", "동", "남", "서"];
+   
+                arr.forEach((n) => {
+                 obj[n] = ++obj[n] || 1;
+                });
+                for (let key in obj) {
+                 answer.push([key, obj[key]]);
+                 }
+                 answer.sort((a, b) => b[1] - a[1]);
+                 const dir = answer[0][0]; 
+                 
+                 var value = directions[dir];
+                 console.log(value);
+                 const buttons = document.getElementsByClassName("buttonss");
+                 console.log(buttons);
+                 for (var ii = 0; ii < buttons.length; ii++){
+                  if(buttons[ii].innerText === value){
+                  buttons[ii].click();
+                  }
+                  }
+                  arr = [];
+
+            }
+
+        const classification = results.multiHandedness[index];
+        const isRightHand = classification.label === 'Right';
+        const landmarks = results.multiHandLandmarks[index];
+        
         }
-    ///    console.log(actions, "actions");
-    //    document.getElementById(value).click();
     }
+}
+</script>
+<script>
+
     const modal_open = () => {
         document.getElementById('modal').style.display = 'block'
     }
@@ -78,7 +194,7 @@
         location.href = "/";
     }
     const name =document.getElementById("name").innerText;
-    
+
     const sendAction = (url, params = {}) => {
         $.ajax({
             url,
@@ -89,21 +205,22 @@
             data: params
         }).done((req) => {
             const { player, field, event, actions } = req;
+
             $('#game').text(field.description);
             $('#position').text(`(${field.x},${field.y})`);
             const x = field.x;
             const y = field.y;
-            $('#control').html('');
 
-            actions.forEach((action, i) => {
-                const dom = $('<button class = "buttons" ></button>');
+            $('#control').html('');
+            actions.forEach((action) => {
+                const dom = $('<button class ="buttonss"></button>');
                 dom.text(action.text);
-                $('#control').append(dom);
                 dom.bind('click', function () {
                     sendAction(action.url, action.params);
-                });    
+                });
+
+                $('#control').append(dom);
             })
-        
 
             if (field.x === 9 && field.y === 9) {
                 if (player.teeth >= 30) {
@@ -142,3 +259,4 @@
 </script>
 </body>
 </html>
+
