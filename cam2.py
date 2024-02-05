@@ -1,4 +1,3 @@
-
 import cv2
 import mediapipe as mp
 from keras.models import load_model
@@ -102,4 +101,3 @@ for i in range(len(chordsave)):
 
 print('동작:', showchord)
 '''
-

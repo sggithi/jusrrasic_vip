@@ -22,16 +22,33 @@
   position: absolute;
 }
 
-.input_video3 {
-  width: 100%;
-  height: calc(35% - 20px);
-  object-fit: contain;
-  z-index: 1;
-  transform: scaleX(-1);
+
+.container {
+  position: fixed;
+  width: 700px;
+  left: 200px;
+  height: 300px;
+  top: 200px;
+}
+.column1 {
+  width: 300px;
+  height: 300px;
+}
+.columns {
+  width: 700px;
+}
+.column2 {
+  position: relative;
+  height: 300px;
+  width: 300px;
+  left: 10px;
 }
 
-.column {
-  float: right;
-  width: 400px;
-  left: 500px;
+.panel1 {
+  height: 300px;
+}
+
+.panel is-info {
+  height: 300px;
+
 }

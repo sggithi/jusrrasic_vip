@@ -82,10 +82,10 @@ app.post("/login", async (req, res) => {
   user.key = encryptPassword(crypto.randomBytes(20));
   let header_auth = `Bearer ${user.key}`;
 
+
   res.cookie("authorization", header_auth);
   res.cookie("email", email);
   await user.save();
-
   res.status(200).json({ key: user.key });
 });
 
@@ -138,6 +138,8 @@ app.get("/game/:name", async (req, res) => {
     player: player,
     have: true,
   });
+
+
   const data = { name: name, inventory: inventory };
   res.render("game", { data });
 });
@@ -612,9 +614,20 @@ app.listen(port, () => {
   console.log(`listening at port: ${port}...`);
 });
 
-// python
-const spawn = require("child_process").spawn;
-const click_auto = spawn("python3", ["cam.py", 1]);
-click_auto.stdout.on("data", (data) => {
-  console.log(`stdout : ${data}`);
-});
+
+//python 연결
+// var { spawn } = require("child_process");
+// const result = spawn("python", ["cam2.py"]);
+
+// result.stdout.on("data", (data) => {
+//   console.log(`stdout: ${data}`);
+// });
+
+// result.stderr.on("data", (data) => {
+//   console.error(`stderr: ${data}`);
+// });
+
+// result.on("close", (code) => {
+//   console.log(`child process exited with code ${code}`);
+// });
+
