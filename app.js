@@ -81,10 +81,11 @@ app.post("/login", async (req, res) => {
 
   user.key = encryptPassword(crypto.randomBytes(20));
   let header_auth = `Bearer ${user.key}`;
+
+
   res.cookie("authorization", header_auth);
   res.cookie("email", email);
   await user.save();
-
   res.status(200).json({ key: user.key });
 });
 
@@ -138,6 +139,7 @@ app.get("/game/:name", async (req, res) => {
     have: true,
   });
 
+
   const data = { name: name, inventory: inventory };
   res.render("game", { data });
 });
@@ -176,6 +178,7 @@ app.post("/action/:name", setAuth, async (req, res) => {
     field = mapManager.getField(player.x, player.y);
   } else if (action === "move") {
     const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
+
     let x = player.x;
     let y = player.y;
     if (direction === 0) {
@@ -611,6 +614,7 @@ app.listen(port, () => {
   console.log(`listening at port: ${port}...`);
 });
 
+
 //python 연결
 // var { spawn } = require("child_process");
 // const result = spawn("python", ["cam2.py"]);
@@ -626,3 +630,4 @@ app.listen(port, () => {
 // result.on("close", (code) => {
 //   console.log(`child process exited with code ${code}`);
 // });
+

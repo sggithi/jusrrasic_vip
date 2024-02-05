@@ -8,6 +8,11 @@
 
     <link href="/static/style/game.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.1/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.1/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.2/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.1/hands.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,6 +26,25 @@
     <div class="inventory_info">
     </div>
 </div>
+
+<!-- WEBCAM INPUT -->
+<div class="column">
+    <article class="panel is-info">
+        <p class="panel-heading">
+        User
+        </p>
+        <div class="panel-block">
+        <video class="input_video3"></video>
+        </div>
+    </article>
+</div>
+<div class="loading">
+    <div class="spinner"></div>
+</div>
+<div style="visibility: hidden;" class="control3">
+</div>
+
+
 
 <div id="name"><%= data.name%></div>
 <div id="status">
@@ -48,6 +72,59 @@
 
     </div>
 </div>
+<script>
+    // webCam 처리
+const video3 = document.getElementsByClassName('input_video3')[0];
+const fpsControl = new FPS();
+const controlsElement3 = document.getElementsByClassName('control3')[0];
+const spinner = document.querySelector('.loading');
+spinner.ontransitionend = () => {
+    spinner.style.display = 'none';
+};
+// 손 방향 처리
+
+const hands = new Hands({locateFile: (file) => {
+    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.1/${file}`;
+}});
+hands.onResults(onResultsHands);
+
+const camera = new Camera(video3, {
+    onFrame: async () => {
+    await hands.send({image: video3});
+    },
+    width: 480,
+    height: 480
+});
+
+camera.start();
+
+var arr = [];
+function onResultsHands(results) {
+    document.body.classList.add('loaded');
+    // fpsControl.tick();
+    if (results.multiHandLandmarks && results.multiHandedness) {
+        
+        for (let index = 0; index < results.multiHandLandmarks.length; index++) {
+            let x0 = results.multiHandLandmarks[index][0].x
+            let y0 = results.multiHandLandmarks[index][0].y
+            let x9 = results.multiHandLandmarks[index][9].x
+            let y9 = results.multiHandLandmarks[index][9].y
+    
+    
+            if(Math.abs(x9 - x0) < 0.05){
+            m = 1000000000
+            }else{
+            m = Math.abs((y9 - y0)/(x9 - x0));
+            }
+            if(m >= 0 && m <= 1){
+            if( x9 > x0){
+                arr.push(3);
+                console.log("left");
+            }
+                
+            else{
+                arr.push(1);
+                console.log("right");
 
 <!DOCTYPE html>
 <html>
@@ -105,6 +182,7 @@
   <script type="text/javascript" src="./js/hands.js"></script>
 </body>
 </html>
+
 
 
 <script>
@@ -268,7 +346,9 @@ new ControlPanel(controlsElement3, {
 
             $('#control').html('');
             actions.forEach((action) => {
+
                 const dom = $('<button class = "buttonss"></button>');
+
                 dom.text(action.text);
                 dom.bind('click', function () {
                     sendAction(action.url, action.params);

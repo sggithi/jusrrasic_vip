@@ -22,6 +22,7 @@
   position: absolute;
 }
 
+
 .container {
   position: fixed;
   width: 700px;
@@ -49,4 +50,5 @@
 
 .panel is-info {
   height: 300px;
+
 }
